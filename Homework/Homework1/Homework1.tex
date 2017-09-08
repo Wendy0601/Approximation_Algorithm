@@ -1,0 +1,96 @@
+\documentclass[a4paper,12pt]{article}
+%改变页边距
+\usepackage[english]{babel}
+\usepackage{geometry}
+\geometry{left=1.5cm,right=1.5cm,top=2.0cm,bottom=2cm}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[numbers]{natbib}
+\citestyle{IEEE}
+\usepackage{subfigure}
+\usepackage{indentfirst} % 段首空格
+%\usepackage[utf8]{inputenc}
+%\usepackage[english]{babel}
+\usepackage{gensymb}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\usepackage{ gensymb }
+\usepackage{indentfirst} 
+\usepackage{times}
+\begin{document}
+	\title{Homework 1}
+	\author{
+			Wenting LI
+		\and
+			liw14@rpi.edu
+			}
+	\maketitle
+
+
+ \section*{1. }
+\subsection*{a. }
+Given a $(\Delta+1)$-colorable graph, where $\Delta$ is the maximum degree of any vertex in $G=(V,E)$,
+
+\begin{enumerate}
+\item[1. ]Find the vertex $v$ in $G$ with the maximum degree $\Delta$ and its neighbor $N(v)=\{w | (v,w) \in E, i=1,\dots,\Delta \}$;
+
+\item[2. ]First color $v$ with one color, then color its neighbors $w_i \in N(v)$ one by one. If $w_i$ is also connected to $w_j, i\neq j$, then color them with different colors. In this way, we need at most $\Delta +1$ colors to color $v$ and its neighbor  $N(v)$;
+
+\item[3. ]Then find another $v^{\prime}$ not colored yet and its neighbor $N(v^{\prime})=\{w | (v^{\prime},w) \in E, i\leq \Delta \}$. Color them in the same way as step (2) using the $\Delta +1$ colors;
+
+\item[4. ]Continue to color all other vertexes with less than $\Delta +1$ colors until the graph $G$ is completely colored.
+\end{enumerate}
+
+As we can color G in poly-time with at most $(\Delta +1)$ colors, then $G$ is $(\Delta +1)$ colorable.
+\subsection*{b. }
+Bipartite graph is an undirected graph with nodes partitioned into group $X$ and $Y$. For each line, its one ending node is in group $X$ and the other ending node is in $Y$. 
+
+Then we can color all the nodes in group $X$ with one color and the nodes in group $Y$ with the other color. Therefore, bipartite graphs are $2$-colorable. 
+
+\subsection*{c.}
+Given undirected 3-colorable graph $G=(V,E)$,  $|V|=n$.
+For each $v \in V$ vertext, let $d(v)$ be the degree of $v$.
+
+If $d(v)\geq \sqrt{(n)}$, then remove $v$ and its neighbors $N(v)=\{w_i| (v,w_i) \in E, i\geq \sqrt{(n)}\}$, and color $v$ with the first color and then color its neighbor $w_1$ with the second color, and then color all other neighbors one by one. If two of its neighbors $w_i, w_j$ are connected, then color them with the second and the third color, otherwise color the neighbors with the second color. We can color the subgraph with a poly-time $O(n)$.
+
+As graph $G$ is a 3 colorable graph and thus its subgraph is also a 3-colorable graph, thus we need at most 3 colors to color each subgraph. 
+
+Each time we remove at most $\sqrt{n}+1$ vetex from $G$, which has $n$ vertex in total, thus we need to remove at most $ \sqrt{(n)} $. As we need color each subgraph with at most 3 colors, then in order to color all these vertex and its neighbors, we need at most $O(\sqrt{n})$ colors. 
+
+Until all the vertex in $G$ have degree less than $\sqrt{(n)}$, we can apply the algorithm in (a) to color them with $O(\sqrt{(n)})$ colors with a poly-time.
+
+In summary, we need $O(\sqrt{n}) $ colors.
+\subsection*{d.}
+Given undirected 3-colorable graph $G=(V,E)$,  $|V|=n$.
+For each $v \in V$ vertext, let $d(v)$ be the degree of $v$.\\
+If $d(v)\geq n^{\frac{2}{3}}$, then remove $v$ and its neighbors $N(v)=\{w_i| (v,w_i) \in E, i\geq \sqrt{(n)}\}$, and color $v$ with the first color and then color its neighbor $w_1$ with the second color, and then color all other neighbors one by one. If two of its neighbors $w_i, w_j$ are connected, then color them with the second and the third color, otherwise color the neighbors with the second color. We can color the subgraph with a poly-time $O(n)$.
+
+As graph $G$ is a 4 colorable graph and thus its subgraph is also a 3-colorable graph, thus we need at most 4 colors to color each subgraph. 
+
+Each time we remove at most $(n^{\frac{2}{3}}+1)$ vetex from $G$, which has $n$ vertex in total, thus we need to remove at most $ n^{\frac{1}{3}} $. As we need color each subgraph with at most 4 colors, then in order to color all these vertex and its neighbors, we need at most $O(n^{\frac{1}{3}})$ colors. 
+
+Until all the vertex in $G$ have degree less than $O(n^{\frac{1}{3}})+O(n^{\frac{2}{3}})$, we can apply the algorithm in (a) to color them with $O(n^{\frac{2}{3}})$ colors with a poly-time.
+
+In summary, we need $O(n^{\frac{2}{3}}) $ colors.
+
+\subsection*{e. }
+\noindent \textbf{Claim:}
+Suppose VERTEX COLORING is approximable to a factor better than $\frac{4}{3} k$ for a $k$-colorable graph when $P \neq NP$, then determining if a graph is 3-colorable is solvable in poly-time.
+
+$\textbf{Proof:} \Rightarrow $  
+
+If VERTEX COLORING is approximable to a factor better than $\frac{4}{3} k$ when $P \neq NP$, then we can find a poly-time algorithm that using less $\frac{4}{3} k$ colors for a $k$-colorable graph. 
+
+When $k=3$ and $\frac{4}{3} k=4$, as $ 3 < \frac{4}{3} k$, then we can find a poly-time algorithm to determine if a graph is 3-colorable.
+
+This is contradict to the fact that determining if a graph is 3-colorable is NP-Complete. Therefore, VERTEX COLORING  is not approximable to a factor better than $\frac{4}{3}$ unless $P=NP$.
+ 
+ 
+ 
+\end{document}	
