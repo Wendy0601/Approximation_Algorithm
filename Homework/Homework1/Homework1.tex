@@ -91,6 +91,86 @@ When $k=3$ and $\frac{4}{3} k=4$, as $ 3 < \frac{4}{3} k$, then we can find a po
 
 This is contradict to the fact that determining if a graph is 3-colorable is NP-Complete. Therefore, VERTEX COLORING  is not approximable to a factor better than $\frac{4}{3}$ unless $P=NP$.
  
+
+\section*{1.5 }
+\subsection*{(a) }
+As an extreme point is a feasible solution of the linear program, we will show that if any extreme point is not in the set of $\{0, \frac{1}{2}, 1\}$, then it is not a feasible solution of the linear program by contradiction.
+
+$\textbf{Proof:} \Rightarrow $ 
+
+Suppose there is one extreme point $x_{i^{\prime}}$ of the linear program that has $x_{i^{\prime}} \notin \{0, \frac{1}{2}, 1\}$. 
+
+$\Rightarrow$ the optimal solution $f^*$ of the linear program is
+\begin{equation}\label{1}
+f^* =  x_{i^{\prime}} w_{i^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}} w_i x_i
+\end{equation}
+where $x_i$ are all the extreme points.
+
+As $\forall (i,j) \in E, x_i + x_j \geq 1$ and there is at least one point $x_j^{\prime}$ that $(i^{\prime},j^{\prime}) \in E$, we have $x_{i^{\prime}} \geq 1-x_{j^{\prime}}$.  \\
+$\Rightarrow$ \eqref{1} becomes: 
+\begin{align}\label{2}
+f^* &=  x_{i^{\prime}} w_{i^{\prime}}+x_{j^{\prime}} w_{j^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i
+\\ &  \geq (1-x_{j^{\prime}})w_{i^{\prime}} + x_{j^{\prime}} w_{j^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i
+\\ & =   w_{i^{\prime}} + x_{j^{\prime}}(w_{j^{\prime}} -w_{i^{\prime}})+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i  \label{5} 
+\end{align} 
  
+\noindent However, we can find other solutions when $x_{i^{\prime}} \in \{0, \frac{1}{2}, 1\}$,
+\begin{enumerate}
+\item[1. ] If $x_{i^{\prime}}=0$ and $x_{j^{\prime}}=1$, then the solution $f_1=w_{j^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i$ 
+\item[2. ] If $x_{i^{\prime}}=\frac{1}{2}$ and $x_{j^{\prime}}=\frac{1}{2}$, then the solution $f_2=\frac{1}{2}(w_{i^{\prime}}+w_{j^{\prime}})+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i$ 
+\item[3. ] If $x_{i^{\prime}}=1$ and $x_{j^{\prime}}=0$, then the solution $f_3=w_{i^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i$\\
+\end{enumerate}
+Then we will show the contradiction that $f^*$ is not the minimum.
+\begin{enumerate}
+\item[(1) .] If $w_{i^{\prime}} > w_{j^{\prime}}$, then from \eqref{2}, we have
+\begin{align}
+f^* & \geq  x_{i^{\prime}} w_{j^{\prime}}+x_{j^{\prime}} w_{j^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i \\
+& \geq w_{j^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i\\
+& = f_1
+\end{align}
+\item[(2) .] If $w_{i^{\prime}} = w_{j^{\prime}}$, then from \eqref{5}, we have $(w_{j^{\prime}} -w_{i^{\prime}})=0$ and  $f^* \geq f_3$;
+\item[(3) .] If $w_{i^{\prime}} < w_{j^{\prime}}$, then from \eqref{5}, we have $(w_{j^{\prime}} -w_{i^{\prime}})>0$ and $f^* > f_3$.
+\end{enumerate} 
  
+Therefore, $f^*$ is not the minimum and this is contradict to our assumption. Hence, we have demonstrated that any the extreme point of the linear program has the property that  $ x_i \in \{0, \frac{1}{2}, 1\}$ for all $i \in V$. 
+
+\subsection*{(b)}
+I first give an algorithm for the vertex cover problem when the input graph is planar, then I will show that it is a $\dfrac{3}{2}$-approximation algorithm.
+
+My algorithm is as following:
+\begin{enumerate}
+\item Input the planar graph and run the 4-color for it (assign each vertex one of four colors such that for any edge $(i,j) \in E$, vertices $i$ and $j$ have been assigned different colors);
+\item Find the color $*$ that is assigned to the maximum number of points;
+\item Take all the points that are assigned by the other three colors rather than the color $*$. Then these points form the vertex cover of the graph.
+\end{enumerate}
+
+Then I will demonstrate that this algorithm is $\dfrac{3}{2}$-approximation.
+
+$\textbf{Proof:} \Rightarrow $  
+\begin{enumerate}
+\item[1. ] As running the 4-color algorithm and finding the color with the maximum number  can be finished in  poly-time, this algorithm is a poly-time method;\\
+\item[2. ] As each line is assigned with two distinct colors and at least one of them is not the color $*$,  at least one of the points of each line is selected by this algorithm. Thus our solution is a vertex cover;
+\item[3. ] We employ the optimal solution of linear program  LP-OPT as the lower bound of the vertex cover problem. \\
+
+When there are $n$ points in the graph, then the LP-OPT$=\dfrac{n}{2}$ and the optimal solution of vertex cover LP-OPT $\leq$ OPT.\\
+
+As all the $n$ points of the graph is assigned with one of the four colors, the maximal number of points $N(*)$ assigned by the color $*$ is larger than $\dfrac{n}{4}$, otherwise the total number of all these four colors is less than $n$. Thus the number of points selected by my algorithm $S$ satisfies
+\begin{align}
+S &=n-N(*)\leq n-\dfrac{n}{4}
+\\& =\dfrac{3n}{4}
+\\ & =\dfrac{3}{2} \text{LP-OPT}
+\\ & \leq \dfrac{3}{2} \text{OPT}
+\end{align} 
+Therefore, this algorithm is a $\dfrac{3}{2}$-approximation algorithm.  
+
+\item[4. ] There is one example in Figure \ref{ex} that shows when the equal sign is reached. For different colors are assigned to these 4 points and our algorithm select 3 of them. The number of vertex cover is 2. Therefore, our algorithm is $\dfrac{3}{2}$ times of the OPT.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.3\textwidth]{./example}
+\caption{One example}\label{ex}
+\label{fig:example}
+\end{figure}
+\end{enumerate}
+
 \end{document}	
