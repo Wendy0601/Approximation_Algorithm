@@ -97,83 +97,82 @@ This is contradict to the fact that determining if a graph is 3-colorable is NP-
 
 \section*{1.5 }
 \subsection*{(a) }
-As an extreme point is a feasible solution of the linear program, we will show that if any extreme point is not in the set of $\{0, \frac{1}{2}, 1\}$, then it is not a feasible solution of the linear program by contradiction.
+We will show that if any extreme point not in the set of $\{0, \frac{1}{2}, 1\}$, then it is not an extreme point, in other word, we will show that it can be expressed as $\lambda x^1 + (1-\lambda) x^2$ for $0 < \lambda < 1$ and the $x^1$ and $x^2$ are distinct feasible  solutions.
 
 $\textbf{Proof:} \Rightarrow $ 
 
-Suppose there is one extreme point $x_{i^{\prime}}$ of the linear program that has $x_{i^{\prime}} \notin \{0, \frac{1}{2}, 1\}$. 
-
-$\Rightarrow$ the optimal solution $f^*$ of the linear program is
+Suppose there is one extreme point $x_i \notin \{0, \frac{1}{2}, 1\}$, then there are three possibilities of the range of $x_i$.
+\begin{enumerate}
+\item[(1) ] If $x_i \in (0, \frac{1}{2})$ is an extreme point, then $x_j > \frac{1}{2}, \forall (i,j) \in E$, since $x_i+x_j\geq 1$.
+$\Rightarrow $ we can find a point $x_i^1$\\
 \begin{equation}\label{1}
-f^* =  x_{i^{\prime}} w_{i^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}} w_i x_i
-\end{equation}
-where $x_i$ are all the extreme points.
+x_i^1=x_i-\varepsilon \geq 0
+\end{equation} 
+for some small positive number $\varepsilon$, and we can also find another point  $x_i^2$
+\begin{equation}\label{2}
+x_i^2=x_i+\varepsilon \geq 0
+\end{equation} 
+since $x_i \geq 0$ and $\varepsilon>0$. 
 
-As $\forall (i,j) \in E, x_i + x_j \geq 1$ and there is at least one point $x_j^{\prime}$ that $(i^{\prime},j^{\prime}) \in E$, we have $x_{i^{\prime}} \geq 1-x_{j^{\prime}}$.  \\
-$\Rightarrow$ \eqref{1} becomes: 
-\begin{align}\label{2}
-f^* &=  x_{i^{\prime}} w_{i^{\prime}}+x_{j^{\prime}} w_{j^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i
-\\ &  \geq (1-x_{j^{\prime}})w_{i^{\prime}} + x_{j^{\prime}} w_{j^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i
-\\ & =   w_{i^{\prime}} + x_{j^{\prime}}(w_{j^{\prime}} -w_{i^{\prime}})+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i  \label{5} 
+Accordingly, we can find the points $x_j^1$ and $x_j^2$ 
+\begin{equation}\label{3}
+x_j^1=x_j+\varepsilon \geq 0 
+\end{equation}
+\begin{equation}\label{4}
+x_j^2=x_j-\varepsilon \geq 0
+\end{equation}
+
+We can show that positive numbers $x_i^1$ and $x_i^2$ are distinct and feasible points, because
+\begin{equation}\label{sum1}
+x_i^1+x_j^1= (x_i-\varepsilon)+ (x_j+\varepsilon)=x_i+ x_j\geq 1
+\end{equation}
+Thus $x_i^1$ is a feasible point. Similarly, $x_i^2$ is also a feasible point. As $\varepsilon > 0$, they are distinct.
+
+Then we can demonstrate that $x_i$ can be expressed by $x_i^1$ and $x_i^2$ as follows:
+\begin{align}\label{6}
+x_i &=\lambda(x_i^1)+(1-\lambda)x_i^2 \\ 
+ &=\lambda(x_i-\varepsilon)+(1-\lambda)(x_i+\varepsilon) \\ \label{8}
+ & =x_i -\varepsilon \lambda +(1-\lambda) \varepsilon 
 \end{align} 
- 
-\noindent However, we can find other solutions when $x_{i^{\prime}} \in \{0, \frac{1}{2}, 1\}$,
-\begin{enumerate}
-\item[1. ] If $x_{i^{\prime}}=0$ and $x_{j^{\prime}}=1$, then the solution $f_1=w_{j^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i$ 
-\item[2. ] If $x_{i^{\prime}}=\frac{1}{2}$ and $x_{j^{\prime}}=\frac{1}{2}$, then the solution $f_2=\frac{1}{2}(w_{i^{\prime}}+w_{j^{\prime}})+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i$ 
-\item[3. ] If $x_{i^{\prime}}=1$ and $x_{j^{\prime}}=0$, then the solution $f_3=w_{i^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i$\\
+Let $-\varepsilon \lambda +(1-\lambda) \varepsilon =0$, then $\lambda=0.5 \in (0,1)$, therefore, $x_i$ can be expressed by the two distinct feasible points;
+
+\item[(2) ]If $x_i \in (\frac{1}{2},1)$ is an extreme point, then $x_j > 0, \forall (i,j) \in E$, then the $x_i^1$ and $x_i^2$ in \eqref{1} and  \eqref{2}  are still positive respectively, the points $x_j^1$ and $x_j^2$ in  \eqref{3} and \eqref{4} are also positive. Meanwhile \eqref{sum1}  still no less than 1 and thus $x_i^1$ can $x_i^2$ are feasible points. Similarly, we can express $x_i$ with $x_i^1$ and $x_i^2$ according to the equations \eqref{6}-\eqref{8};
+
+\item[(3) ] If $x_i > 1$, then let $x_j \geq 0, \forall (i,j) \in E$. Then we can find $\varepsilon >0$ such that the $x_i^1 > 1$ and $x_i^2 > 1$ from \eqref{1} and  \eqref{2}, and then $x_j^1$ and $x_j^2$ can any number no less than 0 to make $x_i^1 + x_j^1 \geq 1$ and $x_i^2 + x_j^2 \geq 1$, thus $\exists x_i^1, x_i^2$ are feasible points, and then by applying \eqref{6}-\eqref{8}, we can also find $\lambda=0.5$ to express $x_i$ by $x_i^1$ and $x_i^2$. 
 \end{enumerate}
-Then we will show the contradiction that $f^*$ is not the minimum.
-\begin{enumerate}
-\item[(1) .] If $w_{i^{\prime}} > w_{j^{\prime}}$, then from \eqref{2}, we have
-\begin{align}
-f^* & \geq  x_{i^{\prime}} w_{j^{\prime}}+x_{j^{\prime}} w_{j^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i \\
-& \geq w_{j^{\prime}}+\Sigma_{i \in V, i\neq i^{\prime}, i\neq j^{\prime}}  w_i x_i\\
-& = f_1
-\end{align}
-\item[(2) .] If $w_{i^{\prime}} = w_{j^{\prime}}$, then from \eqref{5}, we have $(w_{j^{\prime}} -w_{i^{\prime}})=0$ and  $f^* \geq f_3$;
-\item[(3) .] If $w_{i^{\prime}} < w_{j^{\prime}}$, then from \eqref{5}, we have $(w_{j^{\prime}} -w_{i^{\prime}})>0$ and $f^* > f_3$.
-\end{enumerate} 
- 
-Therefore, $f^*$ is not the minimum and this is contradict to our assumption. Hence, we have demonstrated that any the extreme point of the linear program has the property that  $ x_i \in \{0, \frac{1}{2}, 1\}$ for all $i \in V$. 
+Therefore these discussions indicate the contradictions to the assumption that $x_i$ is an extreme point. Hence, all extreme points have the property that $x_i  \in \{0, \frac{1}{2}, 1\}$.
 
 \subsection*{(b)}
-I first give an algorithm for the vertex cover problem when the input graph is planar, then I will show that it is a $\dfrac{3}{2}$-approximation algorithm.
+I first explain the algorithm, then I will show that it is a $\dfrac{3}{2}$-approximation algorithm.
 
 My algorithm is as following:
 \begin{enumerate}
-\item Input the planar graph and run the 4-color for it (assign each vertex one of four colors such that for any edge $(i,j) \in E$, vertices $i$ and $j$ have been assigned different colors);
-\item Find the color $*$ that is assigned to the maximum number of points;
-\item Take all the points that are assigned by the other three colors rather than the color $*$. Then these points form the vertex cover of the graph.
+\item Apply the LP solver to return the extreme points and find the extreme point that achieves the minimum value of the object function. Then all the points of the graph are assigned with the values in the set of $  \{0,\frac{1}{2}, 1\}$;
+\item Take all the points assigned  with $1$;
+\item For the subgraph of the points assigned with $\frac{1}{2}$, we apply the poly-time algorithm to 4-color it. Among these four colors, find the one color that is assigned to the maximum number of points and the set of these points is denoted as $S$;
+\item Take those points in the set of $\bar{S}=\{i| x_i=\frac{1}{2} \text{ and }i \notin S\}$ and round each of them to be 1, in other words, we take the points assigned with the other three colors;
+\item Then all these points taken in step 2 and 4 form our solution. 
 \end{enumerate}
 
-Then I will demonstrate that this algorithm is $\dfrac{3}{2}$-approximation.
+Then I will demonstrate that our solution is a $\dfrac{3}{2}$-approximation algorithm.
 
 $\textbf{Proof:} \Rightarrow $  
 \begin{enumerate}
-\item[1. ] As running the 4-color algorithm and finding the color with the maximum number  can be finished in  poly-time, this algorithm is a poly-time method;\\
-\item[2. ] As each line is assigned with two distinct colors and at least one of them is not the color $*$,  at least one of the points of each line is selected by this algorithm. Thus our solution is a vertex cover;
-\item[3. ] We employ the optimal solution of linear program  LP-OPT as the lower bound of the vertex cover problem. \\
+\item[1. ] As running the 4-color algorithm and the LP solvers  can be finished in  poly-time, this algorithm is a poly-time method; 
+\item[2. ] As the extreme points have the property $x_i \in \{0,\frac{1}{2}, 1\}$, then the points taken in the Step 2 can cover those lines that one of its two points is assigned with $1$; for those lines that two of their ending points are assigned with $\frac{1}{2}$, we apply the 4-color algorithm to them and take the points not belong to the set $S$. As each line is assigned with distinct colors, there is at least one color belonging to the three colors we take and thus our algorithm takes at least one of the points of each line. Therefore, our solution is a vertex cover; 
+\item[3. ] We will show that our algorithm has a approximation factor $\frac{3}{2}$.\\
 
-When there are $n$ points in the graph, then the LP-OPT$=\dfrac{n}{2}$ and the optimal solution of vertex cover LP-OPT $\leq$ OPT.\\
+Let $x_i^*$ be the extreme points from LP solver and achieve the minimum weight. Then all the points of the graph are assigned with the value in the set $\{0,\frac{1}{2}, 1\}$. Our solution take all the points assigned with $1$, and the points in the set of $\bar{S}=\{i| x_i^*=\frac{1}{2} \text{ and }i \notin S\}$. If all the points assigned with $\frac{1}{2}$ form the set $N_{\frac{1}{2}}=\{i| x_i^*=\frac{1}{2} \}$, then the size of $S$ is more than $\frac{1}{4} |N_{\frac{1}{2}}|$, otherwise the total number of the points colored by the 4 colors will be less than $|N_{\frac{1}{2}}|$.  Then the weight of our solution $W$ satisfy the following relations:
 
-As all the $n$ points of the graph is assigned with one of the four colors, the maximal number of points $N(*)$ assigned by the color $*$ is larger than $\dfrac{n}{4}$, otherwise the total number of all these four colors is less than $n$. Thus the number of points selected by my algorithm $S$ satisfies
 \begin{align}
-S &=n-N(*)\leq n-\dfrac{n}{4}
-\\& =\dfrac{3n}{4}
-\\ & =\dfrac{3}{2} \text{LP-OPT}
-\\ & \leq \dfrac{3}{2} \text{OPT}
+W &=\Sigma_{x_i^*=1} w_i +\Sigma_{  i \in \bar{S}} w_i
+\\&  \leq (\Sigma_{x_i^*=1} w_i x_i^* + \frac{3}{4} \times  2 \Sigma_{i \in N_{\frac{1}{2}}} w_i)  (\text{since $|\bar{S}| \leq \dfrac{3}{4}|N_{\frac{1}{2}}|$})
+\\ & \leq \frac{3}{2} (\Sigma_{x_i^*=1} w_i x_i^* + \Sigma_{i \in N_{\frac{1}{2}}} w_i)
+\\ &= \frac{3}{2} \text{LP-OPT}
+\\ & \leq \frac{3}{2} \text{OPT}
 \end{align} 
-Therefore, this algorithm is a $\dfrac{3}{2}$-approximation algorithm.  
-
-\item[4. ] There is one example in Figure \ref{ex} that shows when the equal sign is reached. For different colors are assigned to these 4 points and our algorithm select 3 of them. The number of vertex cover is 2. Therefore, our algorithm is $\dfrac{3}{2}$ times of the OPT.
-
-\begin{figure}[!h]
-\centering
-\includegraphics[width=0.3\textwidth]{./example}
-\caption{One example}\label{ex}
-\label{fig:example}
-\end{figure}
+Therefore, our algorithm is a $\dfrac{3}{2}$-approximation algorithm.  
+  
 \end{enumerate}
 
 \end{document}	
