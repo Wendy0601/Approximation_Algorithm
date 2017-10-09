@@ -1,0 +1,153 @@
+\documentclass[a4paper,12pt]{article}
+%改变页边距
+\usepackage[english]{babel}
+\usepackage{geometry}
+\geometry{left=1.5cm,right=1.5cm,top=2.0cm,bottom=2cm}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[numbers]{natbib}
+\citestyle{IEEE}
+\usepackage{subfigure}
+\usepackage{indentfirst} % 段首空格
+%\usepackage[utf8]{inputenc}
+%\usepackage[english]{babel}
+\usepackage{gensymb}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\usepackage{ gensymb }
+\usepackage{indentfirst} 
+\usepackage{times}
+\usepackage{color}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\def\S{{\mathcal{S}}}
+\def\N{{\mathcal{N}}}
+\begin{document}
+	\title{Midtern Exam}
+	\author{
+			Wenting Li
+		\and
+			liw14@rpi.edu
+			}
+	\maketitle
+\section*{(1)}
+Let define variables $x_i, i= 1,\dots, n$ for the $i$th spy, and $x_i=1$ if the $i$th spy is chosen in the team and $x_i=0$ if he is not in the team; define the variables $y_j, j= 1,\dots, m$ for the $j$ task, and $y_j=1$ if the $j$th task is assigned to $S_j$ to do and $y_j=0$ if the $j$th task is assigned to $T_j$,  then we can model this problem by an integer programming issue:
+\begin{align}
+\text{minimize } & \Sigma_{ i= 1}^n   x_{i}\\
+\text{subject to } &   x_i \geq y_j \quad \text{if } i \in S_j  \\ \label{2}
+&  x_i \geq 1-y_j \quad \text{if } i \in T_j  \\ \label{3}
+& x_i \in \{0,1\}  \\
+& y_j \in \{0,1\} \quad i= 1,\dots, n, j= 1,\dots, m
+\end{align}
+
+I first explain the equivalence of this Integer programming issue and the issue of selecting spies to finish the tasks.  As our objective function is to minimize the sum of $x_i$, then from (\ref{2}) and (\ref{3}) we know that $x_i$ is exactly 1 if the $j$th task is assigned to $S_j$ and $i \in S_j$,  or if the $j$th task is assigned to $T_j$ and $i \in T_j$. Thus no mater the $j$th task is assigned to $S_j$ or $T_j$, all the members $i$ in that set are selected in the team, hence the solution is feasible to finish all the tasks. Therefore, the minimum of the objective function returns the minimum number of the spies in the team.
+
+Then we can obtain the linear problem relaxation by replacing $ x_i, y_j \in \{0,1\}$ with $0 \leq x_i \leq 1, 0 \leq x_i \leq 1$, then we have
+\begin{align}
+\text{minimize } & \Sigma_{ i= 1 }^n   x_{i}\\ \label{S} 
+\text{subject to } &   x_i \geq y_j \quad \text{if } i \in S_j \\ \label{T}
+&  x_i \geq 1-y_j \quad \text{if } i \in T_j  \\ 
+& 0 \leq x_i \leq 1  \\
+&0 \leq y_j \leq 1 \quad i= 1,\dots, n, j= 1,\dots, m
+\end{align}
+
+By solving this linear programming problem, we can obtain its optimal solution $x_i^*$ and $y_j^*$ and LP-OPT. 
+
+Thus my approximation algorithm is to choose the set $S_j$ with the probability $y_j^*$ and choose the set $T_j$ with the probability $1-y_j^*$ for each task $j$ until all the tasks are assigned either by $S_j$ or $T_j$. 
+
+This algorithm can be achieved in polynomial time, and we can demonstrate that this is a 2-approximation algorithm.
+
+\noindent \textbf{Proof:\\}
+The expectation  of the size of our team is:
+\begin{align} 
+E(\Sigma_{ i= 1}^n   x_{i}) & = \Sigma_{ i= 1}^n   E(x_{i})\\ 
+& = \Sigma_{ i= 1}^n  \text{Pr($x_i$ is chosen in the team)}\\ 
+& = \Sigma_{ i= 1}^n  (1-\text{Pr($x_i$ is not chosen in the team))} \label{E}
+\end{align} 
+Assume that there are $k_i$ sets (in all the sets $S_j$ and $T_j, j=1, \dots , m $ ) that contain the spy $x_i$
+\begin{align}
+\text{Pr($x_i$ is not chosen in the team)} & = \prod_{j}\text{Pr($S_j$ is not chosen when $i \in S_j$)} \prod_j \text{Pr($T_j$ is not chosen when $i \in T_j$)}\\
+&= \prod_{j: i \in S_j} (1-y_j^*) \prod_{j: i \in T_j} y_j^*\text{ Use the arithmetic-geometric inequality} \\ 
+& \leq (\frac{\Sigma_{j: i \in S_j} (1-y_j^*)  + \Sigma_{j: i \in T_j}  y_j^* }{k_i})^{k_i} \\
+&=(\frac{k_i-(\Sigma_{j: i \in S_j}   y_j^*  + \Sigma_{j: i \in T_j} (1-y_j^*))}{k_i})^{k_i} \text{ Since (\ref{S}) and (\ref{T}), then }\\
+& \leq(1-\frac{k_i x_i^*}{k_i})^{k_i}  \\ 
+& = (1-x_i^*)^{k_i} 
+\end{align}
+where $k_i \geq 1, 0 \leq x_i^* \leq 1$,
+
+Then \eqref{E} satisfy:\\
+\begin{align}
+E(\Sigma_{ i= 1}^n   x_{i}) & =  \Sigma_{ i= 1}^n  (1-\text{Pr($x_i$ is not chosen in the team))}\\
+& \leq  \Sigma_{ i= 1}^n  (1- (1-x_i^*)^{k_i} ) \\ \label{show}
+& \leq \Sigma_{ i= 1}^n 2 x_i^*  \\ 
+& =2 \text{ LP-OPT}
+\end{align} 
+
+Notice that the demonstration of $\eqref{show}$ is following:
+Let function $f(x)=1-(1-x)^k -2x$, where $x \in [0,1], k\geq 1$, then the derivative of $f^{\prime}(x)=-k (1-x)^{k-1}-2 \leq 0$, thus $f(x) $ is a decreasing function and $f(x) \leq f(0)=0$, thus $1- (1-x)^k-2x \leq 0 \Rightarrow 1-(1-x_i^*)^{k_i} \leq 2x_i^* $ since $x^*_i \in [0,1], k_i \geq 1$
+
+
+
+\section*{(2) }
+\subsection*{(a)}
+Let $N(v)=\{w \in V| (v,w) \in E\} \cup \{v\}$ and $x_v$ for each $v \in V$, then we can define a LP-relaxation and its dual for the DOMINANTING SET  problem as follows:  
+\begin{align}
+\text{minimize } & \Sigma_{ v \in V} x_v w(v)\\
+\text{subject to } &  \Sigma_{ v \in N(v) } x_{v}\geq 1 \quad \forall {N(v)} \in \N \\
+& x_{v} \geq 0, \quad \forall (v) \in V
+\end{align}
+ 
+and define the set $\N=\{N(v)   | \forall v \in V, N(v) =\{w \in V| (v,w) in E\} \cup \{v\}  \}$ its dual problem is:
+\begin{align}
+\text{maximize } & \Sigma_{N(v) \in \N}  y_{N(v)}\\
+\text{subject to } &  \Sigma_{N(v): v \in N(v) } y_{N(v)} \leq w_{v}, \quad  \forall (v) \in V \\
+& y_{N(v)} \geq 0, \quad  \forall {N(v)} \in \N
+\end{align}
+
+\subsection*{(b)}          
+ 
+\begin{algorithm}
+\caption{The primal-dual method ofDOMINATING SET } 
+\begin{algorithmic} 
+%\Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of a and b}
+\State {Initialization:  $y \gets 0, c \gets \emptyset  $}
+\While{ 
+there are some $N(v)$ that no vertex in $N(v)$ is in the set C }
+\State  Let $w$ be the connected node to $N(v), v \in C$ and $N(w)$ has no vertex in C ($N(w)$ is a voilated neighbor)
+\State Increase $y_{N(w)}$ until for one node $v \in N(w)$ $\Sigma_{N(v): v \in N(v) } y_{N(v)} = w_{v} $
+\State  $C \gets C \cup \{(v)\}$ 
+\EndWhile 
+%\State Find the set $\{r\}$ 
+%\State increase $y_S$ until one edge $x_{rj}$ is bought or $\Sigma_{S: i \in S, j \notin F} y_S = w_{ij},$
+%\State Delete the redundant nodes in each $N(v)$ that has  in the reverse order
+\State \textbf{return} $C$ \Comment{The minimum-weight doimnant set $C$}
+\end{algorithmic}
+\end{algorithm}
+
+\noindent \textbf{Claim 1:} This is a $\Delta$-approximation algorithm.\\
+ 
+\textbf{Proof:}\\
+The total weight of our algorithm satisfy:
+\begin{align}\label{cost}
+\Sigma_{v \in C} w_{v} & =\Sigma_{(v) \in C} \Sigma_{N(v) \in \N: v \in N(v)} y_{N(v)}\\
+& = \Sigma_{N(v) \in \N: v \in N(v)} |N(v)| y_{N(v)}\\ \label{size_N}
+& = \Sigma_{N(v) \in \N: v \in N(v)} |\text{degree}(v) + 1| y_{N(v)}\text{  As the maximum degree is $\Delta$}\\
+& \leq \Sigma_{N(v) \in \N: v \in N(v)} |\Delta + 1| y_{N(v)} \\
+& \leq |\Delta + 1| \text{OPT}
+\end{align}
+
+Notice that our method only add a single new node $v$ to $C$ in each iteration, and the neighbor $N(v)$ has no vertex in C, thus at least there exist one node $(u,v) \in E$ and $u,v \notin C$, otherwise, there is no neighbor that contains $v$ but has no vertex in C. Thus $|N(v)|\leq \Delta$, therefore, the \eqref{size_N} satisfying:\\
+\begin{align}\label{cost}
+ & = \Sigma_{N(v) \in \N: v \in N(v)} |N(v)| y_{N(v)}\\  
+ & \leq \Sigma_{N(v) \in \N: v \in N(v)} |\Delta  | y_{N(v)} \\
+& \leq |\Delta  | \text{OPT}
+\end{align}
+ 
+Hence, this is a $\Delta$-approximation algorithm. 
+\end{document}	

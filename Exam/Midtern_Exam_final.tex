@@ -1,0 +1,164 @@
+\documentclass[a4paper,12pt]{article}
+%改变页边距
+\usepackage[english]{babel}
+\usepackage{geometry}
+\geometry{left=1.5cm,right=1.5cm,top=2.0cm,bottom=2cm}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage[numbers]{natbib}
+\citestyle{IEEE}
+\usepackage{subfigure}
+\usepackage{indentfirst} % 段首空格
+%\usepackage[utf8]{inputenc}
+%\usepackage[english]{babel}
+\usepackage{gensymb}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\usepackage{ gensymb }
+\usepackage{indentfirst} 
+\usepackage{times}
+\usepackage{color}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\def\S{{\mathcal{S}}}
+\def\N{{\mathcal{N}}}
+\begin{document}
+	\title{Midtern Exam}
+	\author{
+			Wenting Li
+		\and
+			liw14@rpi.edu
+			}
+	\maketitle
+\section*{(1)}
+Let define variables $x_i, i= 1,\dots, n$ for the $i$th spy, and $x_i=1$ if the $i$th spy is chosen in the team and $x_i=0$ if he is not in the team; define the variables $y_j, j= 1,\dots, m$ for the $j$ task, and $y_j=1$ if the $j$th task is assigned to $S_j$ to do and $y_j=0$ if the $j$th task is assigned to $T_j$,  then we can model this problem by an integer programming issue:
+\begin{align}
+\text{minimize } & \Sigma_{ i= 1}^n   x_{i}\\
+\text{subject to } &   x_i \geq y_j \quad \text{if } i \in S_j  \\ \label{2}
+&  x_i \geq 1-y_j \quad \text{if } i \in T_j  \\ \label{3}
+& x_i \in \{0,1\}  \\
+& y_j \in \{0,1\} \quad i= 1,\dots, n, j= 1,\dots, m
+\end{align}
+
+I first explain the equivalence of this Integer programming issue and the issue of selecting spies to finish the tasks.  As our objective function is to minimize the sum of $x_i$, then from (\ref{2}) and (\ref{3}) we know that $x_i$ is exactly 1 if the $j$th task is assigned to $S_j$ and $i \in S_j$,  or if the $j$th task is assigned to $T_j$ and $i \in T_j$. Thus no mater the $j$th task is assigned to $S_j$ or $T_j$, all the members $i$ in that set are selected in the team, hence the solution is feasible to finish all the tasks. Therefore, the minimum of the objective function returns the minimum number of the spies in the team.
+
+Then we can obtain the linear problem relaxation by replacing $ x_i, y_j \in \{0,1\}$ with $0 \leq x_i \leq 1, 0 \leq x_i \leq 1$, then we have
+\begin{align}
+\text{minimize } & \Sigma_{ i= 1 }^n   x_{i}\\ \label{S} 
+\text{subject to } &   x_i \geq y_j \quad \text{if } i \in S_j \\ \label{T}
+&  x_i \geq 1-y_j \quad \text{if } i \in T_j  \\ 
+& 0 \leq x_i \leq 1  \\
+&0 \leq y_j \leq 1 \quad i= 1,\dots, n, j= 1,\dots, m
+\end{align}
+
+By solving this linear programming problem, we can obtain its optimal solution $x_i^*$ and $y_j^*$ and LP-OPT. 
+
+Thus my approximation algorithm is to choose the set $S_j$ with the probability $y_j^*$ and choose the set $T_j$ with the probability $1-y_j^*$ for each task $j$ until all the tasks are assigned either by $S_j$ or $T_j$. 
+
+This algorithm can be achieved in polynomial time, and we can demonstrate that this is a 2-approximation algorithm.
+
+\noindent \textbf{Proof:\\}
+The expectation  of the size of our team is:
+\begin{align} 
+E(\Sigma_{ i= 1}^n   x_{i}) & = \Sigma_{ i= 1}^n   E(x_{i})\\ 
+& = \Sigma_{ i= 1}^n  \text{Pr($x_i$ is chosen in the team)}\\ 
+& = \Sigma_{ i= 1}^n  (1-\text{Pr($x_i$ is not chosen in the team))} \label{E}
+\end{align} 
+Assume that there are $k_i$ sets (in all the sets $S_j$ and $T_j, j=1, \dots , m $ ) that contain the spy $x_i$
+\begin{align}
+\text{Pr($x_i$ is not chosen in the team)} & = \prod_{j}\text{Pr($S_j$ is not chosen when $i \in S_j$)} \prod_j \text{Pr($T_j$ is not chosen when $i \in T_j$)}\\
+&= \prod_{j: i \in S_j} (1-y_j^*) \prod_{j: i \in T_j} y_j^*\text{ Since (\ref{S}) and (\ref{T}), then }\\ 
+&\geq  \prod_{j: i \in S_j} (1-x_i^*) \prod_{j: i \in T_j} (1-x_i^*)\\
+& = (1-x_i^*)^{k_i} 
+\end{align}
+where $k_i \geq 1, 0 \leq x_i^* \leq 1$,
+
+Then \eqref{E} satisfy:\\
+\begin{align}
+E(\Sigma_{ i= 1}^n   x_{i}) & =  \Sigma_{ i= 1}^n  (1-\text{Pr($x_i$ is not chosen in the team))}\\
+& \leq  \Sigma_{ i= 1}^n  (1- (1-x_i^*)^{k_i} ) \\ \label{show}
+& \leq \Sigma_{ i= 1}^n 2 x_i^*  \\ 
+& =2 \text{ LP-OPT}
+\end{align} 
+
+Notice that the demonstration of $\eqref{show}$ is following:\\
+Let function $f(x)=1-(1-x)^k -2x$, where $x \in [0,1], k\geq 1$, then the derivative of $f^{\prime}(x)=k (1-x)^{k-1}-2 \leq k-2 $, thus there are two conditions:
+\begin{enumerate}
+\item[1. ] If $k \leq 2$, then $f^{\prime}(x)=k (1-x)^{k-1}-2 \leq k-2 \leq 0, \Rightarrow f(x) $ is a decreasing function and $f(x) \leq f(0)=0$, thus $1- (1-x)^k-2x \leq 0 \Rightarrow 1-(1-x_i^*)^{k_i} \leq 2x_i^* $ since $x^*_i \in [0,1], k_i \geq 1$\\
+\item[2. ] If $k > 2$, then we have
+\begin{align}
+f(x) & =1-(1-x)^k -2x \\
+& < 1-(1-x)^2 -2x \\
+& = -x^2 \\
+& \leq 0
+\end{align}
+\end{enumerate}
+Therefore, we can conclude that $f(x)=1-(1-x)^k -2x \leq 0, \Rightarrow 1-(1-x)^k \leq 2x \Rightarrow \Sigma_{ i= 1}^n  (1- (1-x_i^*)^{k_i} )  \leq \Sigma_{ i= 1}^n 2 x_i^*$
+
+
+
+\section*{(2) }
+\subsection*{(a)}
+Let $N(v)=\{w \in V| (v,w) \in E\} \cup \{v\}$ and $x_v$ for each $v \in V$, then define the set $\N=\{N(v)   | \forall v \in V, N(v) =\{w \in V| (v,w) in E\} \cup \{v\}  \}$, we can define a LP-relaxation and its dual for the DOMINANTING SET  problem as follows:  
+\begin{align}
+\text{minimize } & \Sigma_{ v \in V} x_v \omega(v)\\
+\text{subject to } &  \Sigma_{ v: v \in N(v) } x_{v}\geq 1 \quad \forall {N(v)} \in \N \\
+& x_{v} \geq 0, \quad \forall (v) \in V
+\end{align}
+ 
+and  its dual problem is:
+\begin{align}
+\text{maximize } & \Sigma_{N \in \N}    y_{N }\\
+\text{subject to } &  \Sigma_{N : v \in N(v) } y_{N } \leq \omega(v), \quad  \forall v \in V \\
+& y_{N } \geq 0, \quad  \forall {N(v)} \in \N
+\end{align}
+
+\subsection*{(b)}          
+ 
+\begin{algorithm}
+\caption{The primal-dual method of DOMINATING SET } 
+\begin{algorithmic} 
+%\Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of a and b}
+\State {Initialization:  $y \gets 0, C \gets \emptyset  $}
+\While{ 
+there are some $N(v)$ that has no vertex in the set C }
+\State Pick a set $N(v) \in \N$ has no vertex in C 
+\State For any one vertex $u \in N(v)$, increase the $y_N $ of all the sets $N \in \N$ that contains $u$ $u \in N $ 
+\State until for one node $ \bar{u} \in N(v)$ satisfies that $\Sigma_{N : \bar{u} \in N } y_{N } = \omega (\bar{u})$ 
+\State  $C \gets C \cup \{( \bar{u})\}$ 
+\EndWhile 
+%\State Find the set $\{r\}$ 
+%\State increase $y_S$ until one edge $x_{rj}$ is bought or $\Sigma_{S: i \in S, j \notin F} y_S = w_{ij},$
+%\State Delete the redundant nodes in each $N(v)$ that has  in the reverse order
+\State \textbf{return} $C$ \Comment{The minimum-weight doimnant set $C$}
+\end{algorithmic}
+\end{algorithm}
+
+\noindent \textbf{Claim 1:} This is a $\Delta$-approximation algorithm.\\
+ 
+\textbf{Proof:}\\
+The total weight of our algorithm satisfy:
+\begin{align}\label{cost}
+\Sigma_{v \in C} \omega(v) & =\Sigma_{v \in C} \Sigma_{N : v \in N } y_{N}\\
+& \leq \Sigma_{N \in \N } |N | y_{N }\\ \label{size_N}
+& = \Sigma_{N \in \N: v \in N } |\text{degree} + 1| y_{N }\text{  As the maximum degree is $\Delta$}\\
+& \leq \Sigma_{N  \in \N } |\Delta + 1| y_{N } \\
+& \leq |\Delta + 1| \text{OPT}
+\end{align}
+
+Notice that in each iteration of our method, we only add a single new node $\bar{u} \in N(v) $ to $C$ , and $N(v)$ is the set that has no vertex in $C$. As the degree of any one set is $ \geq 1$, there are at least two vertexes in each $N(v)$. Then after we add one vertex $\bar{u}$ of $N(v)$ to set $C$, there remain at least one vertex not in $C$, but we will never add any vertex of set $N(v)$ to $C$ since $N(v)$ already has one vertex in $C$, therefore there are at most $\Delta$ vertexes of each $N(v)$ added to set $C$, then we have:\\
+\begin{align} 
+\Sigma_{v \in C} \omega(v) & =\Sigma_{v \in C} \Sigma_{N : v \in N } y_{N}\\
+ & = \Sigma_{N  \in \N } \text{\{The number of vertexes of $N$ are added to set $C$\} } y_{N }\\  
+ & \leq \Sigma_{N \in \N}  |\Delta  | y_{N } \\
+& \leq |\Delta  | \text{OPT} 
+\end{align}
+ 
+Hence, this is a $\Delta$-approximation algorithm. 
+\end{document}	
